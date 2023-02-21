@@ -14,16 +14,14 @@ const maxPeriod = dayjs().date(currentDayOfMonth);
 
 export const OrbitalObjectsList: React.FC = () => {
   const [asteroids, setAsteroids] = useState<MappedAsteroidObject[]>([]);
-  const [prevHighestNumber, setPrevHighestNumber] = useState(0);
+  const [prevHighestElement, setPrevHighestElement] = useState<MappedAsteroidObject | null>(null);
+  const [highestElement, setHighestElement] = useState<MappedAsteroidObject | null>(null);
 
   const dayRef = useRef(minPeriod);
-  const counterRef = useRef(0);
 
   useEffect(() => {
     const updateData = async () => {
       const day = dayRef.current;
-      if (counterRef.current === 6) return;
-
       try {
         const {
           data: { near_earth_objects: nearEarthObjects },
@@ -33,7 +31,6 @@ export const OrbitalObjectsList: React.FC = () => {
           [...nearEarthObjects[day.format('YYYY-MM-DD')]],
           day,
         );
-        counterRef.current += 1;
         setAsteroids((prev) => [mappedAsteroidsData, ...prev].slice(0, 6));
 
         if (dayRef.current.get('date') < maxPeriod.get('date')) {
@@ -54,16 +51,18 @@ export const OrbitalObjectsList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const numberOfPotentiallyHazardousNEOsPerDay = asteroids.map(
-      (asteroid) => asteroid.numberOfPotentiallyHazardousNEOs,
-    );
+    const { maxElement, prevMaxElement } = findTwoMaxValues(asteroids);
 
-    const { prevMax } = findTwoMaxValues(numberOfPotentiallyHazardousNEOsPerDay);
-
-    setPrevHighestNumber(prevMax);
+    setPrevHighestElement(prevMaxElement);
+    setHighestElement(maxElement);
   }, [asteroids]);
 
-  const isMostDangerous = (num: number) => num >= prevHighestNumber;
+  const isMostDangerous = (elem: MappedAsteroidObject) => {
+    return (
+      (Object.is(elem, highestElement) && elem.numberOfPotentiallyHazardousNEOs !== 0) ||
+      (Object.is(elem, prevHighestElement) && elem.numberOfPotentiallyHazardousNEOs !== 0)
+    );
+  };
 
   return (
     <Box>
@@ -72,7 +71,7 @@ export const OrbitalObjectsList: React.FC = () => {
           <NewOrbitalObjectItem
             key={asteroid.id}
             asteroid={asteroid}
-            mostDangerous={isMostDangerous(asteroid.numberOfPotentiallyHazardousNEOs)}
+            mostDangerous={isMostDangerous(asteroid)}
           />
         ))}
       </OrbitalObjectsListStyled>

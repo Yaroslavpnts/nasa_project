@@ -7,7 +7,7 @@ interface OrbitalObjectProps {
 export const NewOrbitalObjectItemStyled = styled(Grid)<OrbitalObjectProps>`
   background-color: ${(props) =>
     props.mostdangerous ? props.theme.palette.errorColor.main : '#DBD7D5'};
-  color: ${(props) => (props.mostdangerous ? props.theme.palette.mainTextColor.main : '#282321')};
+  color: ${(props) => (props.mostdangerous ? '#DBD7D5' : '#282321')};
   border-radius: 15px;
   padding: 10px 10px;
   width: 30%;

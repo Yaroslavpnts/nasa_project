@@ -1,5 +1,5 @@
 export interface MappedAsteroidObject {
-  id: number;
+  id: string;
   date: string;
   maxDiameterKilometers: number;
   numberOfPotentiallyHazardousNEOs: number;

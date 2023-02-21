@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 import { AsteroidObjectResponse } from '../api/modelsTypes';
 import { MappedAsteroidObject } from '../components/newOrbitalObjectsList/types';
 
@@ -7,7 +8,7 @@ export const mapAsteroidsDataToRender = (
   date: dayjs.Dayjs,
 ): MappedAsteroidObject => {
   const initialObject: MappedAsteroidObject = {
-    id: 0,
+    id: '',
     date: '',
     maxDiameterKilometers: 0,
     numberOfPotentiallyHazardousNEOs: 0,
@@ -42,7 +43,7 @@ export const mapAsteroidsDataToRender = (
         : acc.fastestNEOKph;
 
     return {
-      id: current.id,
+      id: uuidv4(),
       date: date.format('YYYY-MM-DD'),
       maxDiameterKilometers,
       numberOfPotentiallyHazardousNEOs,
@@ -54,18 +55,28 @@ export const mapAsteroidsDataToRender = (
   return asteroids.reduce(reduceFn, initialObject);
 };
 
-export const findTwoMaxValues = (arr: number[]): { max: number; prevMax: number } => {
-  let max = 0;
-  let prevMax = 0;
+export const findTwoMaxValues = (
+  arr: MappedAsteroidObject[],
+): { maxElement: MappedAsteroidObject; prevMaxElement: MappedAsteroidObject } => {
+  let maxValue = 0;
+  let prevMaxValue = 0;
 
-  arr.forEach((element) => {
-    if (element > max) {
-      prevMax = max;
-      max = element;
-    } else if (element > prevMax) {
-      prevMax = element;
+  let maxElement = {} as MappedAsteroidObject;
+  let prevMaxElement = {} as MappedAsteroidObject;
+
+  const arrCopy = [...arr];
+
+  arrCopy.reverse().forEach((element) => {
+    if (element.numberOfPotentiallyHazardousNEOs >= maxValue) {
+      prevMaxValue = maxValue;
+      maxValue = element.numberOfPotentiallyHazardousNEOs;
+      prevMaxElement = maxElement;
+      maxElement = element;
+    } else if (element.numberOfPotentiallyHazardousNEOs >= prevMaxValue) {
+      prevMaxValue = element.numberOfPotentiallyHazardousNEOs;
+      prevMaxElement = element;
     }
   });
 
-  return { max, prevMax };
+  return { maxElement, prevMaxElement };
 };

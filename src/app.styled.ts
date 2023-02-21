@@ -4,8 +4,7 @@ export const AppStyled = styled(Box)`
   width: 100%;
   min-height: 100vh;
   height: 100%;
-  /* background-image: url('../public/bgSpace.jpeg'); */
-  background-image: url('../public/test.jpg');
+  background-image: url('../public/bgSpace.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: repeat;

@@ -16,7 +16,7 @@ export const NewOrbitalObjectItem: React.FC<NewOrbitalObjectItemProps> = ({
   mostDangerous,
 }) => {
   return (
-    <NewOrbitalObjectItemStyled mostdangerous={mostDangerous ? 'dangerous' : undefined} item>
+    <NewOrbitalObjectItemStyled mostdangerous={mostDangerous ? 1 : 0} item>
       <Typography component='h3'>{asteroid.date}</Typography>
       <OrbitalObjectItemDataStyled sx={{ display: 'flex' }}>
         <ul>

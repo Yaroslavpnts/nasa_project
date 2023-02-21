@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import { api } from '../../api/apiMethods';
@@ -18,37 +18,40 @@ export const OrbitalObjectsList: React.FC = () => {
   const [highestElement, setHighestElement] = useState<MappedAsteroidObject | null>(null);
 
   const dayRef = useRef(minPeriod);
+  const id = useRef<NodeJS.Timeout>();
+
+  const updateData = useCallback(async () => {
+    const day = dayRef.current;
+    try {
+      const {
+        data: { near_earth_objects: nearEarthObjects },
+      } = await api.getNearEarthAsteroids(day);
+
+      const mappedAsteroidsData = mapAsteroidsDataToRender(
+        [...nearEarthObjects[day.format('YYYY-MM-DD')]],
+        day,
+      );
+      setAsteroids((prev) => [mappedAsteroidsData, ...prev].slice(0, 6));
+
+      if (dayRef.current.get('date') < maxPeriod.get('date')) {
+        dayRef.current = dayRef.current.add(1, 'day');
+      } else {
+        dayRef.current = dayRef.current.date(1);
+      }
+
+      id.current = setTimeout(updateData, INTERVAL_TIME);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   useEffect(() => {
-    const updateData = async () => {
-      const day = dayRef.current;
-      try {
-        const {
-          data: { near_earth_objects: nearEarthObjects },
-        } = await api.getNearEarthAsteroids(day);
-
-        const mappedAsteroidsData = mapAsteroidsDataToRender(
-          [...nearEarthObjects[day.format('YYYY-MM-DD')]],
-          day,
-        );
-        setAsteroids((prev) => [mappedAsteroidsData, ...prev].slice(0, 6));
-
-        if (dayRef.current.get('date') < maxPeriod.get('date')) {
-          dayRef.current = dayRef.current.add(1, 'day');
-        } else {
-          dayRef.current = dayRef.current.date(1);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const intervalId = setInterval(updateData, INTERVAL_TIME);
+    setTimeout(updateData, 5000);
 
     return () => {
-      clearInterval(intervalId);
+      clearTimeout(id.current);
     };
-  }, []);
+  }, [updateData]);
 
   useEffect(() => {
     const { maxElement, prevMaxElement } = findTwoMaxValues(asteroids);

@@ -1,7 +1,7 @@
 import { Box, Grid, styled } from '@mui/material';
 
 interface OrbitalObjectProps {
-  mostdangerous?: string;
+  mostdangerous: number;
 }
 
 export const NewOrbitalObjectItemStyled = styled(Grid)<OrbitalObjectProps>`

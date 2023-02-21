@@ -10,7 +10,7 @@ export const AppStyled = styled(Box)`
   background-repeat: no-repeat;
 
   h1 {
-    color: #f1f1ef;
+    color: ${(props) => props.theme.palette.mainTextColor.main};
     text-align: center;
   }
 `;

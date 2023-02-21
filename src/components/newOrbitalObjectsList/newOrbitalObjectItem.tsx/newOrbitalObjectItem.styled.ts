@@ -1,7 +1,10 @@
 import { Grid, styled } from '@mui/material';
 
-export const NewOrbitalObjectItemStyled = styled(Grid)<{
+interface OrbitalObjectProps {
   mostdangerous?: string;
-}>`
-  background-color: ${(props) => (props.mostdangerous ? 'red' : 'grey')};
+}
+
+export const NewOrbitalObjectItemStyled = styled(Grid)<OrbitalObjectProps>`
+  background-color: ${(props) =>
+    props.mostdangerous ? props.theme.palette.errorColor.main : '#DBD7D5'};
 `;

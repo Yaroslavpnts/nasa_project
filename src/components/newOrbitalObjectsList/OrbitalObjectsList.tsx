@@ -58,11 +58,9 @@ export const OrbitalObjectsList: React.FC = () => {
 
     const { prevMax } = findTwoMaxValues(numberOfPotentiallyHazardousNEOsPerDay);
 
-    // setHighestNumber(max);
     setPrevHighestNumber(prevMax);
   }, [asteroids]);
 
-  // const isMostDangerous = (num: number) => num === highestNumber || num === prevHighestNumber;
   const isMostDangerous = (num: number) => num >= prevHighestNumber;
 
   return (

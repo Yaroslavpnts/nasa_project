@@ -17,10 +17,12 @@ export const OrbitalObjectsList: React.FC = () => {
   const [prevHighestNumber, setPrevHighestNumber] = useState(0);
 
   const dayRef = useRef(minPeriod);
+  const counterRef = useRef(0);
 
   useEffect(() => {
     const updateData = async () => {
       const day = dayRef.current;
+      if (counterRef.current === 6) return;
 
       try {
         const {
@@ -31,8 +33,8 @@ export const OrbitalObjectsList: React.FC = () => {
           [...nearEarthObjects[day.format('YYYY-MM-DD')]],
           day,
         );
-
-        setAsteroids((prev) => [...prev, mappedAsteroidsData].slice(-6));
+        counterRef.current += 1;
+        setAsteroids((prev) => [mappedAsteroidsData, ...prev].slice(0, 6));
 
         if (dayRef.current.get('date') < maxPeriod.get('date')) {
           dayRef.current = dayRef.current.add(1, 'day');

@@ -1,12 +1,15 @@
 {
   "name": "nasa-project",
+  "homepage": "https://Yaroslavpnts.github.io/nasa_project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -36,6 +39,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "gh-pages": "^5.0.0",
     "prettier": "^2.8.4",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"

@@ -14,8 +14,7 @@ const maxPeriod = dayjs().date(currentDayOfMonth);
 
 export const OrbitalObjectsList: React.FC = () => {
   const [asteroids, setAsteroids] = useState<MappedAsteroidObject[]>([]);
-  const [prevHighestElement, setPrevHighestElement] = useState<MappedAsteroidObject | null>(null);
-  const [highestElement, setHighestElement] = useState<MappedAsteroidObject | null>(null);
+  const [maxValuesId, setMaxValuesId] = useState<string[]>([]);
 
   const dayRef = useRef(minPeriod);
   const id = useRef<NodeJS.Timeout>();
@@ -54,17 +53,12 @@ export const OrbitalObjectsList: React.FC = () => {
   }, [updateData]);
 
   useEffect(() => {
-    const { maxElement, prevMaxElement } = findTwoMaxValues(asteroids);
-
-    setPrevHighestElement(prevMaxElement);
-    setHighestElement(maxElement);
+    const twoMaxValuesId = findTwoMaxValues(asteroids);
+    setMaxValuesId(twoMaxValuesId);
   }, [asteroids]);
 
   const isMostDangerous = (elem: MappedAsteroidObject) => {
-    return (
-      (Object.is(elem, highestElement) && elem.numberOfPotentiallyHazardousNEOs !== 0) ||
-      (Object.is(elem, prevHighestElement) && elem.numberOfPotentiallyHazardousNEOs !== 0)
-    );
+    return maxValuesId.includes(elem.id) && elem.numberOfPotentiallyHazardousNEOs !== 0;
   };
 
   return (

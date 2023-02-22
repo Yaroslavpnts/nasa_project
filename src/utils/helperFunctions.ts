@@ -58,22 +58,18 @@ export const mapAsteroidsDataToRender = (
 export const findTwoMaxValues = (
   arr: MappedAsteroidObject[],
 ): { maxElement: MappedAsteroidObject; prevMaxElement: MappedAsteroidObject } => {
-  let maxValue = 0;
-  let prevMaxValue = 0;
-
-  let maxElement = {} as MappedAsteroidObject;
-  let prevMaxElement = {} as MappedAsteroidObject;
+  let maxElement = { numberOfPotentiallyHazardousNEOs: 0 } as MappedAsteroidObject;
+  let prevMaxElement = { numberOfPotentiallyHazardousNEOs: 0 } as MappedAsteroidObject;
 
   const arrCopy = [...arr];
 
   arrCopy.reverse().forEach((element) => {
-    if (element.numberOfPotentiallyHazardousNEOs >= maxValue) {
-      prevMaxValue = maxValue;
-      maxValue = element.numberOfPotentiallyHazardousNEOs;
+    if (element.numberOfPotentiallyHazardousNEOs >= maxElement.numberOfPotentiallyHazardousNEOs) {
       prevMaxElement = maxElement;
       maxElement = element;
-    } else if (element.numberOfPotentiallyHazardousNEOs >= prevMaxValue) {
-      prevMaxValue = element.numberOfPotentiallyHazardousNEOs;
+    } else if (
+      element.numberOfPotentiallyHazardousNEOs >= prevMaxElement.numberOfPotentiallyHazardousNEOs
+    ) {
       prevMaxElement = element;
     }
   });
